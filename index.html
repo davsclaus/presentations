@@ -4,9 +4,9 @@
 	<head>
 		<meta charset="utf-8">
 
-		<title>What's new in Fabric 7.3</title>
+		<title>Fabric8 CDI &amp; Arquillian</title>
 
-		<meta name="description" content="A walkthrough the new features of Fuse Fabric">
+		<meta name="description" content="A walkthrough on the integration of Fabric8 with CDI and Arquillian">
 		<meta name="author" content="Ioannis Canellos">
 
 		<meta name="apple-mobile-web-app-capable" content="yes" />
@@ -40,10 +40,13 @@
 			<div class="slides">
 				<section>
               <!--iframe src="http://istation:8181" tyle="width: 90%; height="90%" scrolling="no"/-->
-					<h1>Fuse Fabric</h1>
-					<h3>What's new in version 7.3</h3>
+					<h1>Fabric8 v2</h1>
+					<h3>CDI</h3>
+					<h3>Arquillian</h3>
 					<p>
 						<small>by <a href="http://iocanel.blogspot.com">Ioannis Canellos</a> / <a href="http://twitter.com/iocanel">@iocanel</a></small>
+					</br>
+						<small>and <a href="http://iocanel.blogspot.com">Claus Ibsen</a> / <a href="http://twitter.com/davsclaus">@davsclaus</a></small>
 					</p>
 				</section>
 
@@ -51,361 +54,245 @@
 				<section>
 					<section>
 						<h2>Overview</h2>
-						<p>
-							A lot of things has changed in version 7.3...
-						</p>						
-					</section>
-					<section>
-						<h2>Robustness and Stability</h2>
 						<ul>
-							<li>Adoption of the <a href="http://curator.incubator.apache.org/"> Apache Curator</a></li>
-							<li>Refactored Service Model based on <a href="http://wiki.osgi.org/wiki/Declarative_Services">Declarative Services</a></li>
-							<li>Thread safety</li>
-						</ul>
-					</section>
-					<section>
-						<h2>New features</h2>
-						<ul>
-                            <li>Monitoring Spring and Blueprint status</li>	
-							<li>Port Management Services</li>							
-							<li>Profile URL Handler</li>
-							<li>Partition Service</li>							
-							<li>Git DataStore</li>
-							<li>Git Service</li>
-							<li>Encrypted Confgiuration</li>
-							<li>Process Manager integration</li>
-							<li>Openshift Container Provider</li>
-                            <li>... and more</li>
-						</ul>
+							<li>Prologue</li>
+							<li>CDI Extension</li>
+							<li>Arquillian Extension</li>
+						</ul>						
 					</section>
 				</section>
 				
 				<section>
 					<section>
-						<h2>Robustness and Stability</h2>
-						<p>
-							Fabric 7.2 was mostly a bug fixing release and it did manage to solve a lot of issues....						
-						</p>
-						<p>
-							The question is: "Is this enough?"						
-						</p>
+						<h2>Prologue</h2>
 					</section>
 					<section>
-						<h2>Embracing failure</h2>
-						<p>
-							In a distributed "failure" is meant to happen...						
-						</p>
+						<h2>Fabric8 v1</h2>
 						<ul>
-                            <li>Retry ?</li>
-							<li>Fail fast ?</li>
-							<li>Both ?</li>
+							<li>Framework</li>
+							<li>Tooling</li>
 						</ul>
 					</section>
 					<section>
-						<h2>Apache Curator</h2>
-						<p>
-							<a href="http://zookeeper.apache.org">Apache Zookeeper</a> failures need to be handled by the client code and that makes it really hard to get it right.						
-						</p>
-						<p>
-							<a href="http://http://curator.incubator.apache.org">Apache Curator</a> is a set of Java libraries that make using ZooKeeper much easier.						
-						</p>
+						<h2>Changes in Fabric8 v2</h2>
 						<ul>
-							<li>Configurable Retry Policy</li>
-							<li>Recipes</li>
+							<li>Hello Kubernetes</li>
+							<li>Bye bye OSGi</li>
 						</ul>
 					</section>
 					<section>
-						<h2>Curator Added Value</h2>
-						<p>
-							How Fabric benefits from <a href="http://http://curator.incubator.apache.org">Apache Curator</a> ?						
-						</p>
+						<h2>Hello Kubernetes</h2>
 						<ul>
-							<li>Improved Handling of Connection Losses</li>
-							<li>Reduced I/O with Curator Caches</li>
-							<li>More reliable Group Service based on Curator</li>
+							<li>Container management</li>
+							<li>Service discovery</li>
 						</ul>
 					</section>
 					<section>
-						<h2>Distributed nature does not stop to ZooKeeper</h2>
-						<p>
-							OSGi itself  is like a distributed system						
-						</p>
+						<h2>Bye bye OSGi</h2>
 						<ul>
-							<li>Composed of Dynamic Services</li>
-							<li>Also needs to handle Service Availability</li>
+							<li>Platform</li>
+							<li>Framework(?)</li>
 						</ul>
 					</section>
 					<section>
-						<h2>Lessons learned on OSGi services</h2>
-						<ul>
-							<li>A service consumer may wait or retry</li>
-							<li>A service provider should fail fast</li>
-							<li>A service should only be available if its satisfied</li>
-						</ul>
-					</section>
-					<section>
-						<h2>Fabric and Declarative Services</h2>
-						<ul>
-							<li>Cascading registration / unregistration</li>
-							<li>Determinism</li>
-							<li>No use of proxies</li>
-							<li>Gracefull stop</li>
-							<li>Provides  details on the component (shell, hawtio, jmx)</li>
-						</ul>
-					</section>
-                    <section>
-						<h2>Thread safety</h2>
-						<ul>
-							<li>A lot of concurrency related improvements</li>
-							<li>Code is self documented using jcip annotations</li>
-						</ul>
+						<h2>CDI</h2>
+						<p>The common denominator</p>
 					</section>
 				</section>
 
 				<section>
 					<section>
-						<h2>New Features</h2>
-						<p>
-							Back to the interesting stuff...
-						</p>
+						<h2>CDI Extension</h2>
 					</section>
 					<section>
-						<h2>Spring and Blueprint status</h2>
-						<p>
-							Succesfull provisioning does necesserily mean that application works.
-						</p>
+						<h2>CDI Extension Features</h2>
 						<ul>
-                            <li>Added additional container attributes that display status.</li>
-							<li>Container status based on individual bundle  status.</li>
-							<li>Visible in the container list/info commands.</li>
+							<li>"Hybrid": Inside/Outside of Kubernetes</li>
+							<li>Injection of Kubernetes Client</li>
+							<li>Kubernetes Services as CDI Beans</li>
+							<li>@Service Qualifier</li>
+						</ul>
+					</section>
+                    <section>
+						<h2>Hybrid</h2>
+						<ul>
+							<li>Inside: Understands env variables</li>
+							<li>Outside: Uses the kubernetes api wheen needed</li>
 						</ul>
 					</section>
 					<section>
-						<h2>Port Managing Horrors</h2>
-						<p>
-							Till now ports needed to be hardcoded in the profile.
-						</p>
+						<h2>Client injection</h2>
 						<ul>
-                            <li>Port availability issues.</li>
-							<li>Port conflicts between parent and child containers.</li>
-							<li>Internal port conflicts (multiple profile binding the same port).</li>
-						</ul>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-							## Introducing the Port Service
-
-							Profiles can now reference a port range:
-
-							```
-
-							#org.ops4j.pax.web
-							org.osgi.service.http.connection.port=${port:8080,9090}
-
-							```
-							<ul>
-								<li>Detection of free ports</li>
-								<li>Smart port allocation.</li>
-								<li>Registration of ports used per container ip.</li>
-								<li>Registration of ports used per configuration and key.</li>
-								<li>Deallocation of port when configuration is removed.</li>
-							</ul>
-						</script>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-							## Profile URL Handler
-							Allows to reference any resource that is part of the profile overlay.
-
-							```
-
-							#org.fusesource.fabric.agent.properties
-							bundle.on.the.fly=blueprint:profile:camel-blueprint.xml
-
-							```
-							<ul>
-								<li>Load stuff like broker config, or routes from the profile</li>
-								<li>Bundle-less routes</li>
-							</ul>
-						</script>
-					</section>
-					<section>
-						<h2>Partitioning Tasks</h2>
-						<p>
-							Pretty often a task is composed of multiple work items.
-						</p>
-                        <p>
-							Creating profiles that describe each task is one way, but ...
-						</p>
-						<ul>
-                            <li>It's a manual operation!</li>
-							<li>What if an assigned container goes down?</li>
-							<li>What if the size of the work items changes?</li>
+							<li>Env configured client</li>
+							<li>Added as a "bean"</li>
 						</ul>
 					</section>
 					<section>
-						<h2>Fabric Partition</h2>
-						<p>
-							Create a profile that defines the task and let Fabric do the work item assignment.
-						</p>
-						<ul>
-						          <li>Define how each work item should be processed!</li>
-							<li>Define the work items (e.g. using json)!</li>
-							<li>Fabric will rebalance the task to containers that joined the task.</li>
-						</ul>
-					</section>
-					<section>
-						<h2>Fabric Partition Example: A JMS bridge</h2>
-						<p>
-							Scenario: A complex bridge with multiple from/to pairs. 
-						</p>
+						<h2>Service injection</h2>
+						<p>For each injection point annotated with @Service</p>
+						<br/>
 						<ol>
-                            <li>Define a work item for each pair.</li>
-							<li>Define a camel route template with from/to as placeholders.</li>
-							<li>Define the containers that can process the task.</li>
-							<li>Fabric balances work items accross containers.</li>
-							<li>Each container renders the camel route based on the work item values and executes it.</li>
+							<li>Lookup env for coords</li>
+							<li>Query Kubernetes for Id &amp; Namespace</li>
+							<li>Query Kubernetes for Id?</li>
 						</ol>
-					</section>
-					<section>
-						<h2>Fabric Git DataStore: Why?</h2>
-						<p>
-							Holding the profile configuration in ZooKeeper is nice but ...
-						</p>
-						<ul>
-                            <li>Zookeeper is a PITA over WAN.</li>
-                            <li>Doesn't provide a readable change log.</li>
-							<li>Not easy to know who changed what.</li>
-							<li>Versioning is implemented internally.</li>
-							<li>Importing / Exporting needs to be implemented internally.</li>
-							<li>Users will eventually need to import / export profiles to a VCS.</li>
-						</ul>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-							## Fabric Git DataStore: How does it work?
-							When creating a Fabric you can point it to any remote git repository...
+						<br/>
+						<br/>
+						<br/>
+						<br/>
 
-							```
-							fabric:create 
-								--external-git-url https://github.com/iocanel/fabric-conf.git
-								--external-git-user iocanel
-								--external-git-password mypass
-							```
-							<ul>
-								<li>Each profile configuration change is committed to git.</li>
-								<li>Fabric pushes and pulls changes to remote repository.</li>
-								<li>No need to import or export. Just clone, modify and push</li>
-							</ul>
-						</script>
+						<p>Annotated types: String or URL</p>
 					</section>
 					<section>
-						<h2>Fabric Git DataStore:  Drawbacks</h2>
-						<p>
-							So what are the drawbacks of such setup?
-						</p>
+						<h2>How cool would it be...</h2>
+						<p class="fragment roll-in"> To not only inject the service coords...</p>
+						<p class="fragment roll-in">...but also the clients?</p>
+						<img width="512" height="328" class="fragment fade-in" src="images/shut-up-and-take-my-money.jpg" alt="Shutup and take my money">
+					</section>
+					<section>
+						<h2>@Produces &amp; @Services</h2>
+						<p>Methods annotated with both act as a "converter"</p>
 						<ul>
-						          <li>The remote git repo is a single point of failure.</li>
-							<li>Increases complexity when creating a Fabric.</li>
+							<li>Generic: No need to specify which service</li>
+							<li>We tell the framework how and it takes care of the rest</li>
 						</ul>
-					</section>
-					<section>
-						<h2>Fabric Git Server (HA)</h2>
-						<p>
-							To get all of git coolness, without any drawback ...
-						</p>
-						<ul>
-						          <li>Fabric provides an internal git repository.</li>
-							<li>Exposed over HTTP/HTTPS.</li>
-							<li>HA using master/slave.</li>
-							<li>100% transparent to the user.</li>
-						</ul>
-					</section>
-					<section data-markdown>
-						<script type="text/template">
-							## Encryption support
-							Now with all the git coolness, I really feel that I would need to be able to encrypt values stored in git.
-
-							```
-							#you can have profile properties encrypted like this:
-							key=${crypt:sruh9GVuXG03D0raKYZ6BR3g}
-							```
-							<ul>
-								<li>Create a master password and store it to the registry.</li>
-								<li>Encrypt the sensitive data using the master password.</li>
-								<li>Use the crypt placeholder resolver.</li>
-							</ul>
-						</script>
-					</section>
-					<section>
-						<h2>Fabric and Process Manager integration</h2>
-						<p>
-							Provision external process via fabric profiles.
-						</p>
-						<ul>
-                            <li>Bootstrap external processes using profiles.</li>
-							<li>Provision external processes using profiles.</li>
-						</ul>
-						<p>
-							Example: Start and deploy an app to tomcat/wildfly via profiles.
-						</p>
-					</section>
-					<section>
-						<h2>Fabric inside Openshift</h2>
-						<p>
-							Thre has been a lot of interest in the field but also ...
-						</p>
-						<ul>
-							<li>The easiest way to demostrate Fabric.</li>
-						          <li>Collaboration between RedHat products.</li>
-							<li>Fabric + Openshift = IPAAS!</li>
-						</ul>
-					</section>
-					<section>
-						<h2>Fabric Cartridges for Openshfit</h2>
-						<pre><code data-trim contenteditable>
-rhc create-app registry  [fuse registry cartridge url]						
+						<br/>
+						<br/>
+						<pre class="fragment fade-in"><code data-trim contenteditable>
+@Produces
+@Service
+ActiveMQConnectionFactory convert(@Service String url) {
+    return new ActiveMQConnectionFactory(url);
+}					
 						</code></pre>
 					</section>
 					<section>
-						<h2>Manage Openshift from Fabric</h2>
-						<p>
-							Works the other way around too ...
-						</p>
-												<pre><code data-trim contenteditable>
-#org.fusesource.fabric.openshift.properties
-login = ikanello@redhat.com
-password = somepass
-serverUrl = openshift.redhat.com					
-						</code></pre>
-												<pre><code data-trim contenteditable>
-fabric:container-create-openshift --enseble-server registry					
-						</code></pre>						
+						<h2>Next Steps</h2>
+						<ul>
+							<li>Fabric8 apps should provide default "converters"</li>
+							<li>Combine @Service and @PropertyConfig</li>
+						</ul>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h2>Arquillian</h2>
 					</section>
 					<section>
-						<h2>Openshift Limitations</h2>
-						<p>
-							Openshift has quite a few limitations ...
-						</p>
+						<h2>What do we need to test?</h2>
 						<ul>
-							<li>Public exposes only port 80</li>
-                            <li>Internally can expose more ports that need to be defined upfront</li>
-							<li>Binding port is not the same as connection port</li>
-							<li>Connection port is not known in advance</li>
+							<li>Code</li>
+							<li>Docker Images</li>
+							<li>Kubernetes Config</li>			
+						</ul>					
+					</section>
+					<section>
+						<h2>Big Bang Testing</h2>
+						<p> We need to test everything as whole</p>
+						<img width="512" height="328" src="images/big-bang.jpg" alt="Big Bang">
+					</section>
+					<section>
+						<h2>Arquillian Cube?</h2>
+					    <ul>
+							<li>In container</li>
+							<li>In app server</li>
+							<li>Despite the name doesn't work with Kubernetes</li>			
 						</ul>
 					</section>
                     <section>
-						<h2>Anything else?</h2>
-						<ul>
-							<li>Autoscaler?</li>
+						<h2>Fabric8 Arquillian Extension</h2>
+					    <ul>
+					    	<li>Convention over configuration</li>
+							<li>Kubernetes Support</li>
+							<li>Dependency Management</li>
+							<li>Kubernetes constructs as Arquillian Resources</li>
+							<li>Assertion DSL for Kubernetes constructs</p>			
 						</ul>
+					</section>
+					<section>
+						<h2>Standard Conventions</h2>
+					    <ul>
+					    	<li>Where Kubernetes Master lives</li>
+							<li>Discovery of kubernetes json</li>
+							<li>Discovery of "dependencies"</li>	
+						</ul>
+					</section>
+					<section>
+						<h2>Dependency Discovery</h2>
+					    <ul>
+							<li>Using the classpath</li>
+							<li>Using the pom.xml</li>
+							<li>Explicitly specified as a URL (works with mvn URLs too)</li>	
+						</ul>
+												<pre class="fragment fade-in"><code data-trim contenteditable>
+<extension qualifier="kubernetes">
+    <property name="dependencies">mvn:${project.groupId}/fabric8-mq/${project.version}/json/kubernetes</property>
+</extension>					
+						</code></pre>
+					</section>
+					<section>
+						<h2>Arquillian Resources</h2>
+					    <ul>
+					    	<li>Session</li>
+					    	<li>Pods</li>
+							<li>Replication Controllers</li>
+							<li>Services</li>		
+						</ul>
+					</section>
+					<section>
+						<h2>What is a Session?</h2>
+					    <ul>
+					    	<li>The interaction of the extension with Kubernetes</li>
+					    	<li>Shares lifecycle with the test Suite</li>
+							<li>Has a unique Kubernetes Namespace</li>
+							<li>What happens in session stays in session</li>		
+						</ul>
+					</section>
+					<section>
+						<h2>Arquillian Resources Example</h2>
+						<pre><code data-trim contenteditable>
+
+@RunWith(Arquillian.class)
+public class SuperCoolTest {
+
+    @ArquillianResource
+    KubernetesClient client;
+
+    @ArquillianResource
+    static Session session;
+
+    @Test
+    public void superTest() {
+       //Do stuff
+    }
+}
+				
+						</code></pre>
+					</section>
+					<section>
+						<h2>Assertion Examples</h2>
+						<pre><code data-trim contenteditable>
+@Test
+public void superTest() {
+	assertThat(client)
+	.replicationController("super-controller", session.getNamespace())
+	.isNotNull();
+
+	assertThat(client).pods()
+                .runningStatus()
+                .filterNamespace(session.getNamespace())
+                .haveAtLeast(3, (Condition)(podSchema) ->{return true});
+}
+					
+						</code></pre>
+						 
 					</section>
 				</section>
 				<section>
-					<h1>Questions?</h1>
+					<h2>Questions?</h2>
 				</section>
 				<section>
-					<h1>THE END</h1>
+					<h2>THE END</h2>
 				</section>
 
 			</div>
