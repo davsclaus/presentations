@@ -292,7 +292,399 @@ public void superTest() {
 					<h2>Questions?</h2>
 				</section>
 				<section>
-					<h2>THE END</h2>
+					<h2>The End of Part I</h2>
+				</section>
+
+
+				<section>
+
+					<section>
+						<img src="images/completely-different.png">
+					</section>
+
+					<section>
+						<h2>Camel tooling for iPaaS</h2>
+					</section>
+					<section>
+						<h2>3 kinds of developers</h2>
+	  			        <ul>
+					    	<li>Hawtio: expects to do everything from inside the web browser</li>
+					    	<li>Java IDE: wants to do everything inside their IDE (e.g. using the camel route designer in eclipse)</li>
+							<li>Java CLI: a java + maven kinda guy who may use an IDE or editor</li>
+						</ul>
+	 				</section>
+					<section>
+						<h2>Goals</h2>
+	  			        <ul>
+					    	<li>Offer tooling for all 3 kinds of developers</li>
+					    	<li>Web browser tools (hawtio)</li>
+					    	<li>Eclipse tools (JBDS)</li>
+					    	<li>Command line (forge & maven)</li>
+						</ul>
+					</section>
+					<section>
+						<h2>We want to avoid</h2>
+	  			        <ul>
+					    	<li>Writing 3 sets of independt tools</li>
+					    	<li>Writing tools for each Camel component (there is 170+)</li>
+					    	<li>Being locked to specific version of Camel</li>
+						</ul>
+					</section>
+					<section>
+						<h2>Where are we today?</h2>
+	  			        <ul>
+					    	<li>Apache Camel 2.15 (GA next month)</li>
+					    	<li>Forge Camel commands</li>
+					    	<li>hawtio-forge</li>
+					    	<li>Eclipse Camel editor (Lars's team)</li>
+					    	<li>Eclipse Data Mapper (Keith's team)</li>
+						</ul>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>Apache Camel 2.15</h2>
+	  			        <ul>
+					    	<li>Massive improvements</li>
+					    	<li>Out of the box documentation for</li>
+					    	<li>EIPs, Components, Data Formats, Languages</li>
+					    	<li>All of them categorized (we use the term label)</li>
+					    	<li>... at both design and runtime</li>
+						</ul>
+					</section>
+					<section>
+						<h2>Documentation APIs</h2>
+	  			        <ul>
+					    	<li>CamelContext - Java API</li>
+					    	<li>ManagedCamelContextMBean - JMX API</li>
+					    	<li>json schmea files in JARs</li>
+					    	<li>camel-catalog JAR (has everything)</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>How does it work?</h2>
+						<pre><code data-trim contenteditable>
+
+@UriEndpoint(scheme = "timer", consumerOnly = true, consumerClass = TimerConsumer.class, label = "core,scheduling")
+public class TimerEndpoint extends DefaultEndpoint implements MultipleConsumersSupport {
+    @UriPath @Metadata(required = "true")
+    private String timerName;
+    @UriParam
+    private Date time;
+    @UriParam(defaultValue = "1000")
+    private long period = 1000;
+    @UriParam(defaultValue = "1000")
+    private long delay = 1000;
+    @UriParam
+    private boolean fixedRate;
+    @UriParam(defaultValue = "true")
+    private boolean daemon = true;
+    @UriParam(defaultValue = "0")
+    private long repeatCount;
+    @UriParam
+    private Timer timer;
+
+						</code></pre>
+					</section>
+
+					<section>
+						<h2>JSon Schema file</h2>
+						<pre><code data-trim contenteditable>
+{
+ "component": {
+    "kind": "component",
+    "scheme": "timer",
+    "description": "The Timer Component is for generating message exchanges when a timer fires.",
+    "label": "core,scheduling",
+    "consumerOnly": "true",
+    "javaType": "org.apache.camel.component.timer.TimerComponent",
+    "groupId": "org.apache.camel",
+    "artifactId": "camel-core",
+    "version": "2.15-SNAPSHOT"
+  },
+  "componentProperties": {
+  },
+  "properties": {
+    "timerName": { "kind": "path", "required": "true", "type": "string", "javaType": "java.lang.String", "deprecated": "false", "description": "The name of the timer" },
+    "time": { "kind": "parameter", "type": "object", "javaType": "java.util.Date", "deprecated": "false", "description": "A java.util.Date the first event should be generated. If using the URI the pattern expected is: yyyy-MM-dd HH:mm:ss or yyyy-MM-dd'T'HH:mm:ss." },
+    "period": { "kind": "parameter", "type": "integer", "javaType": "long", "deprecated": "false", "defaultValue": "1000", "description": "If greater than 0 generate periodic events every period milliseconds. The default value is 1000." },
+    "delay": { "kind": "parameter", "type": "integer", "javaType": "long", "deprecated": "false", "defaultValue": "1000", "description": "The number of milliseconds to wait before the first event is generated. Should not be used in conjunction with the time option. The default value is 1000." },
+    "fixedRate": { "kind": "parameter", "type": "boolean", "javaType": "boolean", "deprecated": "false", "defaultValue": "false", "description": "Events take place at approximately regular intervals separated by the specified period." },
+    "daemon": { "kind": "parameter", "type": "boolean", "javaType": "boolean", "deprecated": "false", "defaultValue": "true", "description": "Specifies whether or not the thread associated with the timer endpoint runs as a daemon. The default value is true." },
+    "repeatCount": { "kind": "parameter", "type": "integer", "javaType": "long", "deprecated": "false", "defaultValue": "0", "description": "Specifies a maximum limit of number of fires. So if you set it to 1 the timer will only fire once. If you set it to 5 it will only fire five times. A value of zero or negative means fire forever." },
+    "timer": { "kind": "parameter", "type": "object", "javaType": "java.util.Timer", "deprecated": "false", "description": "To use a custom Timer" },
+    "exchangePattern": { "kind": "parameter", "type": "string", "javaType": "org.apache.camel.ExchangePattern", "enum": [ "InOnly", "RobustInOnly", "InOut", "InOptionalOut", "OutOnly", "RobustOutOnly", "OutIn", "OutOptionalIn" ], "deprecated": "false", "defaultValue": "InOnly", "description": "Sets the default exchange pattern when creating an exchange." },
+    "synchronous": { "kind": "parameter", "type": "boolean", "javaType": "boolean", "deprecated": "false", "defaultValue": "false", "description": "Sets whether synchronous processing should be strictly used or Camel is allowed to use asynchronous processing (if supported)." }
+  }
+}
+						</code></pre>
+					</section>
+
+					<section>
+						<h2>Screenshot from hawtio</h2>
+						<img src="images/camel-hawtio-doc.png">
+					</section>
+
+					<section>
+						<h2>Apache Camel 2.15 cont.</h2>
+	  			        <ul>
+					    	<li>XML DSL all EIPs documented</li>
+					    	<li>Maven Archetype Catalog</li>
+					    	<li>Reuse Camel Karaf Commands</li>
+					    	<li>camel-catalog JAR</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>XML DSL documented</h2>
+						<pre><code data-trim contenteditable>
+  <xs:complexType name="splitDefinition">
+    <xs:complexContent>
+      <xs:extension base="tns:expressionNode">
+        <xs:sequence/>
+        <xs:attribute name="parallelProcessing" type="xs:boolean">
+          <xs:annotation>
+            <xs:documentation xml:lang="en">If enabled then processing each splitted messages occurs concurrently. Note the caller thread will still wait until all messages has been fully processed before it continues. Its only processing the sub messages from the splitter which happens concurrently.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="strategyRef" type="xs:string">
+          <xs:annotation>
+            <xs:documentation xml:lang="en">Sets a reference to the AggregationStrategy to be used to assemble the replies from the splitted messages into a single outgoing message from the Splitter. By default Camel will use the original incoming message to the splitter (leave it unchanged). You can also use a POJO as the AggregationStrategy</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="strategyMethodName" type="xs:string">
+          <xs:annotation>
+            <xs:documentation xml:lang="en">This option can be used to explicit declare the method name to use when using POJOs as the AggregationStrategy.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="strategyMethodAllowNull" type="xs:boolean">
+          <xs:annotation>
+            <xs:documentation xml:lang="en">If this option is false then the aggregate method is not used if there was no data to enrich. If this option is true then null values is used as the oldExchange (when no data to enrich) when using POJOs as the AggregationStrategy</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="executorServiceRef" type="xs:string">
+          <xs:annotation>
+            <xs:documentation xml:lang="en">Refers to a custom Thread Pool to be used for parallel processing. Notice if you set this option then parallel processing is automatic implied and you do not have to enable that option as well.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="streaming" type="xs:boolean">
+          <xs:annotation>
+            <xs:documentation xml:lang="en">When in streaming mode then the splitter splits the original message on-demand and each splitted message is processed one by one. This reduces memory usage as the splitter do not split all the messages first but then we do not know the total size and therefore the link org.apache.camel.ExchangeSPLIT_SIZE is empty. In non-streaming mode (default) the splitter will split each message first to know the total size and then process each message one by one. This requires to keep all the splitted messages in memory and therefore requires more memory. The total size is provided in the link org.apache.camel.ExchangeSPLIT_SIZE header. The streaming mode also affects the aggregation behavior. If enabled then Camel will process replies out-of-order eg in the order they come back. If disabled Camel will process replies in the same order as the messages was splitted.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="stopOnException" type="xs:boolean">
+          <xs:annotation>
+            <xs:documentation xml:lang="en">Will now stop further processing if an exception or failure occurred during processing of an org.apache.camel.Exchange and the caused exception will be thrown. Will also stop if processing the exchange failed (has a fault message) or an exception was thrown and handled by the error handler (such as using onException). In all situations the splitter will stop further processing. This is the same behavior as in pipeline which is used by the routing engine. The default behavior is to not stop but continue processing till the end</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="timeout" type="xs:long">
+          <xs:annotation>
+            <xs:documentation xml:lang="en">Sets a total timeout specified in millis when using parallel processing. If the Splitter hasn't been able to split and process all the sub messages within the given timeframe then the timeout triggers and the Splitter breaks out and continues. Notice if you provide a TimeoutAwareAggregationStrategy then the timeout method is invoked before breaking out. If the timeout is reached with running tasks still remaining certain tasks for which it is difficult for Camel to shut down in a graceful manner may continue to run. So use this option with a bit of care.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="onPrepareRef" type="xs:string">
+          <xs:annotation>
+            <xs:documentation xml:lang="en">Uses the Processor when preparing the org.apache.camel.Exchange to be send. This can be used to deep-clone messages that should be send or any custom logic needed before the exchange is send.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="shareUnitOfWork" type="xs:boolean">
+          <xs:annotation>
+            <xs:documentation xml:lang="en">Shares the org.apache.camel.spi.UnitOfWork with the parent and each of the sub messages. Splitter will by default not share unit of work between the parent exchange and each splitted exchange. This means each splitted exchange has its own individual unit of work.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="parallelAggregate" type="xs:boolean">
+          <xs:annotation>
+            <xs:documentation xml:lang="en">If enabled then the aggregate method on AggregationStrategy can be called concurrently. Notice that this would require the implementation of AggregationStrategy to be implemented as thread-safe. By default this is false meaning that Camel synchronizes the call to the aggregate method. Though in some use-cases this can be used to archive higher performance when the AggregationStrategy is implemented as thread-safe.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:anyAttribute namespace="##other" processContents="skip"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+						</code></pre>
+					</section>
+
+					<section>
+						<h2>Screenshot from IDEA</h2>
+						<img src="images/camel-xsd-doc.png">
+					</section>
+
+					<section>
+						<h2>Forge Camel Commands</h2>
+	  			        <ul>
+					    	<li>Create new projects</li>
+					    	<li>Add components</li>
+					    	<li>Add routes</li>
+					    	<li>Configure components</li>
+					    	<li>Configure endpoints</li>
+					    	<li>... everything but drag/drop GUI editor</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>Screenshot from JBDS</h2>
+						<img src="images/camel-forge-add-component.png">
+					</section>
+
+					<section>
+						<h2>Maven Archetype Catalog</h2>
+	  			        <ul>
+					    	<li>Contains all Camel archetypes</li>
+					    	<li>Publishd to Maven Central</li>
+					    	<li>Included in camel-catalog JAR</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>Used in JBoss Forge</h2>
+						<pre><code data-trim contenteditable>
+
+Press <ENTER> to confirm, or <CTRL>+C to cancel.
+? Catalog: [0-1] 1
+
+[0] ( ) org.apache.camel.archetypes:camel-archetype-activemq:2.15-SNAPSHOT
+[1] ( ) org.apache.camel.archetypes:camel-archetype-api-component:2.15-SNAPSHOT
+[2] ( ) org.apache.camel.archetypes:camel-archetype-blueprint:2.15-SNAPSHOT
+[3] ( ) org.apache.camel.archetypes:camel-archetype-component:2.15-SNAPSHOT
+[4] ( ) org.apache.camel.archetypes:camel-archetype-component-scala:2.15-SNAPSHOT
+[5] ( ) org.apache.camel.archetypes:camel-archetype-cxf-code-first-blueprint:2.15-SNAPSHOT
+[6] ( ) org.apache.camel.archetypes:camel-archetype-cxf-contract-first-blueprint:2.15-SNAPSHOT
+[7] ( ) org.apache.camel.archetypes:camel-archetype-dataformat:2.15-SNAPSHOT
+[8] ( ) org.apache.camel.archetypes:camel-archetype-groovy:2.15-SNAPSHOT
+[9] ( ) org.apache.camel.archetypes:camel-archetype-java:2.15-SNAPSHOT
+[10] ( ) org.apache.camel.archetypes:camel-archetype-scala:2.15-SNAPSHOT
+[11] ( ) org.apache.camel.archetypes:camel-archetype-scr:2.15-SNAPSHOT
+[12] ( ) org.apache.camel.archetypes:camel-archetype-spring:2.15-SNAPSHOT
+[13] ( ) org.apache.camel.archetypes:camel-archetype-spring-dm:2.15-SNAPSHOT
+[14] ( ) org.apache.camel.archetypes:camel-archetype-web:2.15-SNAPSHOT
+						</code></pre>
+					</section>
+
+					<section>
+						<h2>Screenshot from JBDS</h2>
+						<img src="images/camel-new-project.png">
+					</section>
+
+					<section>
+						<h2>Reuse Camel Karaf Commands</h2>
+	  			        <ul>
+					    	<li>commands-core module for reuse</li>
+					    	<li>Forge commands use Jolokia</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>Used in JBoss Forge</h2>
+						<pre><code data-trim contenteditable>
+
+[forge-distribution-2.14.1-SNAPSHOT]$ camel-connect --url http://localhost:8080/hawtio/jolokia/
+***SUCCESS*** Connected to http://localhost:8080/hawtio/jolokia/
+[forge-distribution-2.14.1-SNAPSHOT]$ camel-route-list
+ Context        Route          Status
+ -------        -----          ------
+ camel-1        helloRoute     Started
+[forge-distribution-2.14.1-SNAPSHOT]$
+						</code></pre>
+					</section>
+
+					<section>
+						<h2>Camel Catalog</h2>
+	  			        <ul>
+					    	<li>Standalone JAR</li>
+					    	<li>Contains all schemas</li>
+					    	<li>Java API</li>
+					    	<li>JMX API</li>
+					    	<li>One stop for tooling</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>Camel Catalog Tree</h2>
+						<pre><code data-trim contenteditable>
+
+davsclaus:~/workspace/camel/platforms/catalog/target/classes (master)/$ tree -d
+.
+├── META-INF
+└── org
+    └── apache
+        └── camel
+            └── catalog
+                ├── archetypes
+                ├── components
+                ├── dataformats
+                ├── languages
+                ├── models
+                └── schemas
+						</code></pre>
+					</section>
+
+					<section>
+						<h2>Used in JBoss Forge</h2>
+						<pre><code data-trim contenteditable>
+
+@Override
+public ArchetypeCatalog getArchetypeCatalog() {
+    if (cachedArchetypes == null) {
+        // use the camel catalog to load the archetypes
+        String xml = new DefaultCamelComponentCatalog().archetypeCatalogAsXml();
+        if (xml != null) {
+            try {
+                cachedArchetypes = new ArchetypeCatalogXpp3Reader().read(new StringReader(xml));
+            } catch (Exception e) {
+                logger.log(Level.SEVERE, "Error while retrieving archetypes", e);
+            }
+        }
+    }
+    return cachedArchetypes;
+}
+						</code></pre>
+					</section>
+
+				</section>
+
+				<section>
+
+					<section>
+						<h2>Hawtio Forge</h2>
+					</section>
+
+					<section>
+						<h2>Vision</h2>
+	  			        <ul>
+					    	<li>Tooling for the web developer</li>
+					    	<li>Hawtio with forge</li>
+					    	<li>Reuse forge commands</li>
+					    	<li>Rest API</li>
+					    	<li>Early stuff, James just started end of last week</li>
+						</ul>
+					</section>
+
+					<section>
+						<h2>Screenshot hawtio forge</h2>
+						<img src="images/hawtio-forge-new-project.png">
+					</section>
+
+					<section>
+						<h2>Screenshot hawtio forge</h2>
+						<img src="images/hawtio-forge-add-component.png">
+					</section>
+
+				</section>
+
+				<section>
+					<section>
+						<h2>Questions?</h2>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h2>The end with the happy Camel</h2>
+						<img src="images/beer-camel.png">
+					</section>
+
 				</section>
 
 			</div>
